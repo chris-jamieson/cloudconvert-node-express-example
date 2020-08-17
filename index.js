@@ -68,11 +68,10 @@ app.post(
   "/cc-webhook/raw-body-parser",
   express.raw({ type: "*/*" }),
   (req, res) => {
-    const payloadString = req.body.toString("utf8"); // req.body will be a buffer
     const signature = req.get("Cloudconvert-Signature"); // The value of the "CloudConvert-Signature" header
 
     const isValid = cloudConvert.webhooks.verify(
-      payloadString,
+      req.body,
       signature,
       CC_WEBHOOK_SIGNING_SECRET
     );
@@ -119,12 +118,10 @@ app.post(
     },
   }),
   (req, res) => {
-    payloadString = req.rawBody.toString("utf8");
-
     const signature = req.get("Cloudconvert-Signature"); // The value of the "CloudConvert-Signature" header
 
     const isValid = cloudConvert.webhooks.verify(
-      payloadString,
+      req.rawBody,
       signature,
       CC_WEBHOOK_SIGNING_SECRET
     );
